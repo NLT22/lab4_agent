@@ -66,7 +66,7 @@ def search_flights(origin: str, destination: str) -> str:
     - origin: thành phố khởi hành (VD: 'Hà Nội', 'Hồ Chí Minh')
     - destination: thành phố đến (VD: 'Đà Nẵng', 'Phú Quốc')
 
-    Trả về danh sách chuyến bay với hãng, giờ bay, giá vé.
+    Trả về danh sách chuyến bay với hãng, giờ bay, giá vé một chiều.
     Nếu không tìm thấy tuyến bay, trả về thông báo không có chuyến.
     """
     try:
@@ -86,7 +86,9 @@ def search_flights(origin: str, destination: str) -> str:
         def format_price(price: int) -> str:
             return f"{price:,}".replace(",", ".") + "đ"
 
-        lines = [f"Các chuyến bay từ {route_origin} đến {route_destination}:"]
+        lines = [
+            f"Các chuyến bay từ {route_origin} đến {route_destination} (giá dưới đây là giá vé một chiều):"
+        ]
         for index, flight in enumerate(flights, start=1):
             lines.append(
                 f"{index}. {flight['airline']} | {flight['departure']} - {flight['arrival']} | "
@@ -107,6 +109,8 @@ def search_hotels(city: str, max_price_per_night: int = 99999999) -> str:
     - max_price_per_night: giá tối đa mỗi đêm (VND), mặc định không giới hạn
 
     Trả về danh sách khách sạn phù hợp với tên, số sao, giá, khu vực, rating.
+    Lưu ý: giá trả về là giá mỗi đêm. Nếu người dùng ở nhiều đêm, cần nhân đúng
+    số đêm trước khi truyền chi phí vào calculate_budget.
     """
     try:
         hotels = HOTELS_DB.get(city, [])
@@ -125,7 +129,11 @@ def search_hotels(city: str, max_price_per_night: int = 99999999) -> str:
             )
 
         lines = [
-            f"Danh sách khách sạn tại {city} (giá tối đa {format_price(max_price_per_night)}/đêm):"
+            (
+                f"Danh sách khách sạn tại {city} "
+                f"(giá tối đa {format_price(max_price_per_night)}/đêm, "
+                "mọi mức giá bên dưới đều là giá mỗi đêm):"
+            )
         ]
         for index, hotel in enumerate(filtered_hotels, start=1):
             lines.append(
