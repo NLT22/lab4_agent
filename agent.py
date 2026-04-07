@@ -47,10 +47,9 @@ builder.add_node("agent", agent_node)
 tool_node = ToolNode(tools_list)
 builder.add_node("tools", tool_node)
 
-# TODO: Sinh viên khai báo edges
-# builder.add_edge(START, ...)
-# builder.add_conditional_edges("agent", tools_condition)
-# builder.add_edge("tools", ...)
+builder.add_edge(START, "agent")
+builder.add_conditional_edges("agent", tools_condition)
+builder.add_edge("tools", "agent")
 
 graph = builder.compile()
 
